@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Equazioni di Grado Superiore al Secondo</title>
+
+<script>
+MathJax = {
+  tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+<style>
+:root {
+  --primary:#2d6a9f; --secondary:#e8f4fd; --accent:#f39c12;
+  --green:#27ae60; --red:#e74c3c; --orange:#e67e22;
+  --purple:#8e44ad; --teal:#16a085;
+  --bg:#f5f7fa; --card:#fff; --border:#dce3ea; --text:#2c3e50;
+  --shadow:0 2px 14px rgba(0,0,0,0.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.75;font-size:16px}
+
+header{background:linear-gradient(135deg,#1a4a7a 0%,var(--primary) 60%,#3a8ad4 100%);color:#fff;padding:30px 40px 22px;text-align:center;box-shadow:0 4px 16px rgba(0,0,0,.18)}
+header h1{font-size:1.9rem;font-weight:700;letter-spacing:.5px}
+header p{margin-top:7px;font-size:.96rem;opacity:.88}
+
+/* TABS */
+.tab-bar{display:flex;justify-content:center;flex-wrap:wrap;background:#fff;border-bottom:3px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.tab-btn{padding:14px 36px;font-size:1rem;font-weight:600;border:none;background:#fff;cursor:pointer;color:#6c7a89;border-bottom:3px solid transparent;margin-bottom:-3px;transition:.2s}
+.tab-btn:hover{color:var(--primary);background:var(--secondary)}
+.tab-btn.active{color:var(--primary);border-bottom-color:var(--primary)}
+
+.tab-content{display:none;max-width:1040px;margin:0 auto;padding:36px 22px 80px}
+.tab-content.active{display:block}
+
+/* SECTION */
+.section{background:var(--card);border-radius:14px;padding:28px 34px;margin-bottom:28px;box-shadow:var(--shadow)}
+.section-title{font-size:1.22rem;font-weight:700;color:var(--primary);margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.section-title .icon{font-size:1.3rem}
+
+/* FORMULA BOX */
+.formula-box{background:linear-gradient(135deg,#eaf2fb,#d6eaf8);border:2px solid #aed6f1;border-radius:12px;padding:18px 24px;margin:16px 0;text-align:center;font-size:1.08rem}
+.formula-label{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--primary);margin-bottom:8px}
+
+/* INFO / NOTE BOX */
+.info-box{background:#fff8e1;border-left:5px solid var(--accent);border-radius:8px;padding:14px 18px;margin:14px 0;font-size:.95rem}
+.warn-box{background:#fdf2e9;border-left:5px solid var(--orange);border-radius:8px;padding:14px 18px;margin:14px 0;font-size:.95rem}
+.ok-box{background:#eafaf1;border-left:5px solid var(--green);border-radius:8px;padding:14px 18px;margin:14px 0;font-size:.95rem}
+.tip-box{background:#f4ecf7;border-left:5px solid var(--purple);border-radius:8px;padding:14px 18px;margin:14px 0;font-size:.95rem}
+
+/* STEPS */
+.steps{counter-reset:step-cnt;margin:16px 0}
+.step{display:flex;gap:16px;margin-bottom:16px;align-items:flex-start}
+.step-num{counter-increment:step-cnt;min-width:34px;height:34px;border-radius:50%;background:var(--primary);color:#fff;font-weight:700;font-size:.95rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.step-body{flex:1}
+.step-body strong{color:var(--primary)}
+
+/* EXAMPLE */
+.example{background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:20px 24px;margin:16px 0}
+.example-title{font-size:.82rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--teal);margin-bottom:12px}
+
+/* TABLE */
+.theory-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.93rem}
+.theory-table th{background:var(--primary);color:#fff;padding:11px 15px;text-align:left}
+.theory-table td{padding:11px 15px;border-bottom:1px solid var(--border)}
+.theory-table tr:nth-child(even) td{background:var(--secondary)}
+
+/* BADGE */
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.77rem;font-weight:700;margin-left:8px}
+.badge-blue{background:#d6eaf8;color:#1a5276}
+.badge-green{background:#d5f5e3;color:#1e8449}
+.badge-orange{background:#fdebd0;color:#935116}
+.badge-purple{background:#e8daef;color:#6c3483}
+
+/* SIMULATORE */
+.sim-card{background:var(--card);border-radius:14px;padding:28px 34px;margin-bottom:28px;box-shadow:var(--shadow);border-top:4px solid var(--primary)}
+.sim-title{font-size:1.15rem;font-weight:700;color:var(--primary);margin-bottom:18px}
+.input-row{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:18px;align-items:flex-end}
+.input-group{display:flex;flex-direction:column;gap:5px}
+.input-group label{font-size:.82rem;font-weight:600;color:#555}
+.input-group input{width:100px;padding:9px 12px;border:2px solid var(--border);border-radius:8px;font-size:1rem;text-align:center;transition:.2s}
+.input-group input:focus{border-color:var(--primary);outline:none;background:#eaf2fb}
+.btn-primary{background:var(--primary);color:#fff;border:none;border-radius:8px;padding:10px 26px;font-size:1rem;font-weight:600;cursor:pointer;transition:.2s}
+.btn-primary:hover{background:#1a5276}
+.btn-secondary{background:#ecf0f1;color:var(--text);border:none;border-radius:8px;padding:10px 20px;font-size:.95rem;font-weight:600;cursor:pointer;transition:.2s;margin-left:8px}
+.btn-secondary:hover{background:#d5d8dc}
+
+.result-area{margin-top:18px;display:none}
+.result-step{background:#fafbfd;border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:12px;font-size:.95rem}
+.result-step .step-lbl{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--primary);margin-bottom:8px}
+.sol-final{background:#eafaf1;border:2px solid var(--green);border-radius:10px;padding:14px 20px;font-weight:700;color:#1a6e3c;font-size:1rem;margin-top:6px}
+.sol-none{background:#fdedec;border:2px solid var(--red);border-radius:10px;padding:14px 20px;font-weight:700;color:#922b21;font-size:1rem}
+.chart-wrap{position:relative;height:300px;margin:20px 0 6px;background:#fff;border-radius:10px;border:1px solid var(--border);padding:10px}
+
+/* ESERCIZI */
+.ex-card{background:var(--card);border-radius:14px;padding:26px 32px;margin-bottom:22px;box-shadow:var(--shadow);border-left:5px solid var(--primary)}
+.ex-card.trinomia{border-left-color:var(--purple)}
+.ex-card.binomia{border-left-color:var(--teal)}
+.ex-card.ruffini{border-left-color:var(--orange)}
+.ex-header{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.ex-num{width:40px;height:40px;border-radius:50%;background:var(--primary);color:#fff;font-size:1.1rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ex-card.trinomia .ex-num{background:var(--purple)}
+.ex-card.binomia .ex-num{background:var(--teal)}
+.ex-card.ruffini .ex-num{background:var(--orange)}
+.ex-title{font-size:1.05rem;font-weight:700}
+.ex-subtitle{font-size:.85rem;color:#7f8c8d;margin-top:2px}
+.equation-display{background:var(--secondary);border-radius:10px;padding:16px 22px;margin:12px 0;font-size:1.1rem;text-align:center;border-left:4px solid var(--primary)}
+.ex-card.trinomia .equation-display{border-left-color:var(--purple);background:#f4ecf7}
+.ex-card.binomia .equation-display{border-left-color:var(--teal);background:#e8f8f5}
+.ex-card.ruffini .equation-display{border-left-color:var(--orange);background:#fdf2e9}
+.sol-btn{background:#ecf0f1;border:none;border-radius:8px;padding:9px 20px;font-size:.9rem;font-weight:600;cursor:pointer;transition:.2s;color:#555;margin-top:10px}
+.sol-btn:hover{background:#d5d8dc;color:var(--text)}
+.sol-area{display:none;margin-top:14px;background:#fafbfd;border-radius:10px;padding:18px 22px;border:1px solid var(--border)}
+.sol-area.shown{display:block}
+
+/* MAPPA */
+.mappa{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin:16px 0}
+.mappa-item{background:var(--secondary);border:2px solid #aed6f1;border-radius:12px;padding:16px 18px;text-align:center}
+.mappa-item h4{color:var(--primary);font-size:.95rem;margin-bottom:8px}
+.mappa-item p{font-size:.85rem;color:#555}
+
+/* PROGRESS */
+.progress-bar-wrap{background:#ecf0f1;border-radius:8px;height:8px;margin:8px 0 18px;overflow:hidden}
+.progress-bar{height:100%;border-radius:8px;background:linear-gradient(90deg,var(--primary),#3a8ad4);transition:.4s}
+
+/* DSA hint */
+.dsa-hint{background:#fffde7;border:1.5px dashed #f9a825;border-radius:10px;padding:12px 18px;font-size:.88rem;color:#7d5a00;margin-top:10px}
+.dsa-hint strong{color:#b7770d}
+
+/* Responsive */
+@media(max-width:600px){
+  header h1{font-size:1.4rem}
+  .tab-btn{padding:11px 18px;font-size:.9rem}
+  .section,.sim-card,.ex-card{padding:18px 16px}
+  .input-row{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📐 Equazioni di Grado Superiore al Secondo</h1>
+  <p>Scheda di teoria · Simulazioni interattive · Esercizi guidati</p>
+</header>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('teoria',this)">📖 Teoria</button>
+  <button class="tab-btn" onclick="switchTab('simulazioni',this)">🔢 Simulazioni</button>
+  <button class="tab-btn" onclick="switchTab('esercizi',this)">✏️ Esercizi</button>
+</div>
+
+<!-- ========== TAB TEORIA ========== -->
+<div id="tab-teoria" class="tab-content active">
+
+  <!-- INTRO -->
+  <div class="section">
+    <div class="section-title"><span class="icon">📌</span> Richiamo: equazioni polinomiali</div>
+    <p>Un'equazione polinomiale di grado <strong>n</strong> è della forma:</p>
+    <div class="formula-box">
+      <div class="formula-label">Forma generale</div>
+      \[ a_n x^n + a_{n-1} x^{n-1} + \cdots + a_1 x + a_0 = 0 \quad (a_n \neq 0) \]
+    </div>
+    <p>Il <strong>Teorema Fondamentale dell'Algebra</strong> garantisce che ogni equazione polinomiale di grado \(n\) (con coefficienti complessi) ha esattamente <strong>\(n\) soluzioni</strong> nell'insieme dei numeri complessi (contate con la molteplicità).</p>
+    <div class="info-box">
+      💡 <strong>In \(\mathbb{R}\):</strong> alcune soluzioni possono essere complesse non reali, quindi il numero di soluzioni <em>reali</em> può essere inferiore a \(n\). Le radici complesse non reali compaiono sempre in coppie coniugate.
+    </div>
+
+    <div class="mappa">
+      <div class="mappa-item">
+        <h4>Biquadratica</h4>
+        <p>\(ax^4+bx^2+c=0\)</p>
+        <p>Sostituzione \(t=x^2\)</p>
+      </div>
+      <div class="mappa-item">
+        <h4>Binomia</h4>
+        <p>\(x^n = k\)</p>
+        <p>Radice n-esima</p>
+      </div>
+      <div class="mappa-item">
+        <h4>Trinomia</h4>
+        <p>\(ax^{2n}+bx^n+c=0\)</p>
+        <p>Sostituzione \(t=x^n\)</p>
+      </div>
+      <div class="mappa-item">
+        <h4>Scomponibile</h4>
+        <p>Raccoglimento, Ruffini</p>
+        <p>Prodotto di fattori \(=0\)</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- BIQUADRATICHE -->
+  <div class="section">
+    <div class="section-title"><span class="icon">🔵</span> Equazioni Biquadratiche <span class="badge badge-blue">4° grado</span></div>
+    <p>Un'equazione biquadratica ha la forma:</p>
+    <div class="formula-box">
+      \[ ax^4 + bx^2 + c = 0 \quad (a \neq 0) \]
+      <div style="font-size:.85rem;color:#555;margin-top:6px">mancano i termini in \(x^3\) e \(x\)</div>
+    </div>
+
+    <p><strong>Metodo di risoluzione — sostituzione \(t = x^2\):</strong></p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body"><strong>Poni</strong> \(t = x^2\) (con \(t \geq 0\)). L'equazione diventa \(at^2 + bt + c = 0\).</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body"><strong>Risolvi</strong> l'equazione di 2° grado in \(t\): calcola \(\Delta = b^2 - 4ac\).</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body"><strong>Seleziona</strong> le soluzioni \(t_1, t_2\): tieni solo quelle con \(t \geq 0\) (perché \(t = x^2 \geq 0\)).</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body"><strong>Risali</strong> a \(x\): per ogni \(t_i > 0\) si ottengono <em>due</em> soluzioni reali \(x = \pm\sqrt{t_i}\). Se \(t_i = 0\), allora \(x = 0\).</div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-title">✏️ Esempio 1</div>
+      <p>Risolvere \(x^4 - 5x^2 + 4 = 0\)</p>
+      <p><strong>Soluzione:</strong> poniamo \(t = x^2\):</p>
+      <p>\(t^2 - 5t + 4 = 0\)</p>
+      <p>\(\Delta = 25 - 16 = 9\) &nbsp;→&nbsp; \(t = \dfrac{5 \pm 3}{2}\) &nbsp;→&nbsp; \(t_1 = 4,\; t_2 = 1\)</p>
+      <p>Entrambi positivi:</p>
+      <p>Da \(t_1 = 4\): \(x^2 = 4 \Rightarrow x = \pm 2\)</p>
+      <p>Da \(t_2 = 1\): \(x^2 = 1 \Rightarrow x = \pm 1\)</p>
+      <div class="ok-box">✅ Soluzioni: \(S = \{-2,\,-1,\,1,\,2\}\)</div>
+    </div>
+
+    <div class="example">
+      <div class="example-title">✏️ Esempio 2 — discriminante parziale negativo</div>
+      <p>Risolvere \(x^4 + 3x^2 - 4 = 0\)</p>
+      <p>Poniamo \(t = x^2\): \(t^2 + 3t - 4 = 0\)</p>
+      <p>\(\Delta = 9 + 16 = 25\) &nbsp;→&nbsp; \(t_1 = 1,\; t_2 = -4\)</p>
+      <p>\(t_2 = -4 < 0\) → <strong>scartata</strong></p>
+      <p>Da \(t_1 = 1\): \(x = \pm 1\)</p>
+      <div class="ok-box">✅ Soluzioni reali: \(S = \{-1,\,1\}\)</div>
+    </div>
+
+    <div class="warn-box">⚠️ <strong>Attenzione:</strong> se \(\Delta < 0\) per l'equazione in \(t\), o entrambe le soluzioni \(t\) sono negative, l'equazione biquadratica non ha soluzioni reali.</div>
+  </div>
+
+  <!-- BINOMIE -->
+  <div class="section">
+    <div class="section-title"><span class="icon">🟢</span> Equazioni Binomie <span class="badge badge-green">n° grado</span></div>
+    <div class="formula-box">
+      \[ x^n = k \quad \text{oppure} \quad ax^n + b = 0 \]
+    </div>
+
+    <table class="theory-table">
+      <tr>
+        <th>Caso</th><th>Condizione</th><th>Soluzioni reali</th>
+      </tr>
+      <tr>
+        <td>\(n\) pari, \(k > 0\)</td>
+        <td>\(k > 0\)</td>
+        <td>\(x = \pm\sqrt[n]{k}\) &nbsp;→ 2 soluzioni</td>
+      </tr>
+      <tr>
+        <td>\(n\) pari, \(k = 0\)</td>
+        <td>\(k = 0\)</td>
+        <td>\(x = 0\) &nbsp;→ 1 soluzione</td>
+      </tr>
+      <tr>
+        <td>\(n\) pari, \(k < 0\)</td>
+        <td>\(k < 0\)</td>
+        <td>Nessuna soluzione reale</td>
+      </tr>
+      <tr>
+        <td>\(n\) dispari</td>
+        <td>qualsiasi \(k\)</td>
+        <td>\(x = \sqrt[n]{k}\) &nbsp;→ 1 soluzione (reale sempre)</td>
+      </tr>
+    </table>
+
+    <div class="example">
+      <div class="example-title">✏️ Esempi</div>
+      <p><strong>a)</strong> \(x^3 = 8\) &nbsp;→&nbsp; \(x = \sqrt[3]{8} = 2\)</p>
+      <p><strong>b)</strong> \(x^4 = 16\) &nbsp;→&nbsp; \(x = \pm\sqrt[4]{16} = \pm 2\)</p>
+      <p><strong>c)</strong> \(x^5 = -32\) &nbsp;→&nbsp; \(x = \sqrt[5]{-32} = -2\)</p>
+      <p><strong>d)</strong> \(2x^4 + 32 = 0\) &nbsp;→&nbsp; \(x^4 = -16\) &nbsp;→&nbsp; <span style="color:var(--red)">nessuna soluzione reale</span></p>
+    </div>
+  </div>
+
+  <!-- TRINOMIE -->
+  <div class="section">
+    <div class="section-title"><span class="icon">🟣</span> Equazioni Trinomie (con sostituzione) <span class="badge badge-purple">2n° grado</span></div>
+    <div class="formula-box">
+      \[ ax^{2n} + bx^n + c = 0 \quad (a \neq 0) \]
+    </div>
+    <p>Si risolvono con la <strong>sostituzione \(t = x^n\)</strong> (analoga alle biquadratiche, che sono un caso particolare con \(n=2\)).</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body"><strong>Poni</strong> \(t = x^n\). L'equazione diventa \(at^2 + bt + c = 0\).</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body"><strong>Risolvi</strong> in \(t\): trovi \(t_1, t_2\).</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body"><strong>Risali</strong> a \(x\): risolvi \(x^n = t_i\) (equazione binomia) per ogni \(t_i\) accettabile.</div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-title">✏️ Esempio — equazione di 6° grado</div>
+      <p>Risolvere \(x^6 - 9x^3 + 8 = 0\)</p>
+      <p>Poniamo \(t = x^3\): \(t^2 - 9t + 8 = 0\)</p>
+      <p>\((t-1)(t-8) = 0\) &nbsp;→&nbsp; \(t_1 = 1,\; t_2 = 8\)</p>
+      <p>Da \(x^3 = 1\): \(x = 1\)</p>
+      <p>Da \(x^3 = 8\): \(x = 2\)</p>
+      <div class="ok-box">✅ Soluzioni reali: \(S = \{1,\;2\}\)</div>
+    </div>
+  </div>
+
+  <!-- RUFFINI -->
+  <div class="section">
+    <div class="section-title"><span class="icon">🟠</span> Regola di Ruffini e Fattorizzazione <span class="badge badge-orange">n° grado</span></div>
+    <p>Quando un'equazione non rientra nei casi precedenti, si cerca di <strong>scomporla in fattori</strong>.</p>
+
+    <p style="margin-top:14px"><strong>Ricerca delle radici razionali:</strong> se \(x = \frac{p}{q}\) è una radice razionale di \(a_n x^n + \cdots + a_0 = 0\), allora \(p\) è un divisore di \(a_0\) e \(q\) è un divisore di \(a_n\).</p>
+
+    <div class="info-box">
+      💡 <strong>Spesso:</strong> si provano i divisori interi del termine noto \(a_0\) come radici candidate (con \(a_n = 1\)).
+    </div>
+
+    <p style="margin-top:14px"><strong>Divisione con la regola di Ruffini:</strong> se \(x = r\) è radice, allora \((x - r)\) è fattore del polinomio. La divisione si esegue con lo schema di Ruffini.</p>
+
+    <div class="example">
+      <div class="example-title">✏️ Schema di Ruffini — Esempio: \(x^3 - 6x^2 + 11x - 6 = 0\)</div>
+      <p><strong>Step 1:</strong> divisori di 6: ±1, ±2, ±3, ±6. Proviamo \(x=1\):</p>
+      <p>\(1 - 6 + 11 - 6 = 0\) ✓ &nbsp;→&nbsp; \(x=1\) è radice.</p>
+      <p><strong>Step 2:</strong> Ruffini con \(r=1\):</p>
+      <table class="theory-table" style="width:auto;margin:10px 0">
+        <tr><th></th><th>1</th><th>−6</th><th>11</th><th>−6</th></tr>
+        <tr><td style="font-weight:700;color:var(--primary)">1 ↓</td><td></td><td>1</td><td>−5</td><td>6</td></tr>
+        <tr><td></td><td>1</td><td>−5</td><td>6</td><td style="color:var(--green);font-weight:700">0</td></tr>
+      </table>
+      <p>Quoziente: \(x^2 - 5x + 6 = (x-2)(x-3)\)</p>
+      <p>Quindi: \((x-1)(x-2)(x-3) = 0\)</p>
+      <div class="ok-box">✅ Soluzioni: \(S = \{1,\;2,\;3\}\)</div>
+    </div>
+
+    <div class="tip-box">
+      🔑 <strong>Strategia generale:</strong> dopo ogni divisione con Ruffini si ottiene un polinomio di grado inferiore. Si ripete il procedimento finché non si arriva ad un fattore di 2° grado (risolvibile con la formula) o di 1° grado.
+    </div>
+  </div>
+
+  <!-- SCHEMA RIASSUNTIVO -->
+  <div class="section">
+    <div class="section-title"><span class="icon">🗺️</span> Schema Riassuntivo</div>
+    <table class="theory-table">
+      <tr>
+        <th>Tipo</th><th>Forma</th><th>Metodo</th><th>N° soluzioni reali (max)</th>
+      </tr>
+      <tr>
+        <td><strong>Biquadratica</strong></td>
+        <td>\(ax^4+bx^2+c=0\)</td>
+        <td>Sost. \(t=x^2\)</td>
+        <td>0, 2 o 4</td>
+      </tr>
+      <tr>
+        <td><strong>Binomia (n pari)</strong></td>
+        <td>\(x^n=k\)</td>
+        <td>Radice n-esima</td>
+        <td>0 o 2</td>
+      </tr>
+      <tr>
+        <td><strong>Binomia (n dispari)</strong></td>
+        <td>\(x^n=k\)</td>
+        <td>Radice n-esima</td>
+        <td>1</td>
+      </tr>
+      <tr>
+        <td><strong>Trinomia</strong></td>
+        <td>\(ax^{2n}+bx^n+c=0\)</td>
+        <td>Sost. \(t=x^n\)</td>
+        <td>Variabile</td>
+      </tr>
+      <tr>
+        <td><strong>Fattorizzabile (Ruffini)</strong></td>
+        <td>Polinomio generico</td>
+        <td>Ruffini + scomposizione</td>
+        <td>Da 0 a \(n\)</td>
+      </tr>
+    </table>
+    <div class="dsa-hint">
+      📋 <strong>Suggerimento:</strong> prima di risolvere, <em>identifica il tipo</em> dell'equazione. Mancano i termini intermedi? → binomia o biquadratica. Esponenti in rapporto 2:1? → trinomia con sostituzione. Altrimenti → prova Ruffini.
+    </div>
+  </div>
+
+</div><!-- fine tab teoria -->
+
+<!-- ========== TAB SIMULAZIONI ========== -->
+<div id="tab-simulazioni" class="tab-content">
+
+  <!-- SIMULATORE BIQUADRATICHE -->
+  <div class="sim-card">
+    <div class="sim-title">🔵 Solutore Passo-Passo: Equazione Biquadratica</div>
+    <p style="font-size:.93rem;margin-bottom:18px">Inserisci i coefficienti di \(ax^4 + bx^2 + c = 0\):</p>
+    <div class="input-row">
+      <div class="input-group">
+        <label>a (coeff. x⁴)</label>
+        <input type="number" id="biq-a" value="1" step="any">
+      </div>
+      <div class="input-group">
+        <label>b (coeff. x²)</label>
+        <input type="number" id="biq-b" value="-5" step="any">
+      </div>
+      <div class="input-group">
+        <label>c (termine noto)</label>
+        <input type="number" id="biq-c" value="4" step="any">
+      </div>
+      <div style="display:flex;align-items:flex-end;gap:8px">
+        <button class="btn-primary" onclick="solviBiquadratica()">Risolvi</button>
+        <button class="btn-secondary" onclick="resetBiq()">Reset</button>
+      </div>
+    </div>
+    <div id="biq-result" class="result-area"></div>
+    <div id="biq-chart-wrap" class="chart-wrap" style="display:none">
+      <canvas id="biqChart"></canvas>
+    </div>
+    <p id="biq-chart-note" style="display:none;text-align:center;font-size:.82rem;color:#999;margin-top:4px">Grafico di \(f(x) = ax^4 + bx^2 + c\) — le radici sono i punti dove la curva interseca l'asse x</p>
+  </div>
+
+  <!-- SIMULATORE BINOMIE -->
+  <div class="sim-card" style="border-top-color:var(--teal)">
+    <div class="sim-title" style="color:var(--teal)">🟢 Solutore: Equazione Binomia</div>
+    <p style="font-size:.93rem;margin-bottom:18px">Inserisci i valori di \(ax^n + b = 0\) (cioè \(x^n = -b/a\)):</p>
+    <div class="input-row">
+      <div class="input-group">
+        <label>a (coeff.)</label>
+        <input type="number" id="bin-a" value="1" step="any">
+      </div>
+      <div class="input-group">
+        <label>n (esponente, ≥ 2)</label>
+        <input type="number" id="bin-n" value="3" min="2" step="1">
+      </div>
+      <div class="input-group">
+        <label>b (termine noto)</label>
+        <input type="number" id="bin-b" value="-8" step="any">
+      </div>
+      <div style="display:flex;align-items:flex-end">
+        <button class="btn-primary" onclick="solviBinomia()" style="background:var(--teal)">Risolvi</button>
+      </div>
+    </div>
+    <div id="bin-result" class="result-area"></div>
+  </div>
+
+  <!-- SIMULATORE RUFFINI -->
+  <div class="sim-card" style="border-top-color:var(--orange)">
+    <div class="sim-title" style="color:var(--orange)">🟠 Regola di Ruffini — Divisione Guidata</div>
+    <p style="font-size:.93rem;margin-bottom:18px">Inserisci i coefficienti di un polinomio di 3° grado \(ax^3 + bx^2 + cx + d = 0\) e una radice \(r\) da verificare:</p>
+    <div class="input-row">
+      <div class="input-group"><label>a</label><input type="number" id="ruf-a" value="1" step="any"></div>
+      <div class="input-group"><label>b</label><input type="number" id="ruf-b" value="-6" step="any"></div>
+      <div class="input-group"><label>c</label><input type="number" id="ruf-c" value="11" step="any"></div>
+      <div class="input-group"><label>d</label><input type="number" id="ruf-d" value="-6" step="any"></div>
+      <div class="input-group"><label>radice r</label><input type="number" id="ruf-r" value="1" step="any"></div>
+      <div style="display:flex;align-items:flex-end">
+        <button class="btn-primary" onclick="solviRuffini()" style="background:var(--orange)">Verifica e Dividi</button>
+      </div>
+    </div>
+    <div id="ruf-result" class="result-area"></div>
+  </div>
+
+</div><!-- fine tab simulazioni -->
+
+<!-- ========== TAB ESERCIZI ========== -->
+<div id="tab-esercizi" class="tab-content">
+
+  <div style="background:var(--card);border-radius:14px;padding:20px 28px;margin-bottom:24px;box-shadow:var(--shadow);display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+    <div>
+      <div style="font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#888;margin-bottom:4px">Progressi</div>
+      <div id="progress-text" style="font-weight:700;color:var(--primary)">0 / 12 esercizi risolti</div>
+    </div>
+    <div style="flex:1;min-width:200px">
+      <div class="progress-bar-wrap"><div class="progress-bar" id="progress-fill" style="width:0%"></div></div>
+    </div>
+    <button class="btn-secondary" onclick="resetProgress()">Ricomincia</button>
+  </div>
+
+  <!-- GRUPPO 1: BIQUADRATICHE -->
+  <div style="margin-bottom:10px">
+    <h3 style="color:var(--primary);font-size:1.05rem;margin-bottom:16px;padding-left:4px">🔵 Equazioni Biquadratiche</h3>
+  </div>
+
+  <div class="ex-card" id="ex1">
+    <div class="ex-header">
+      <div class="ex-num">1</div>
+      <div><div class="ex-title">Equazione biquadratica</div><div class="ex-subtitle">Livello ★☆☆ — sostituzione diretta</div></div>
+    </div>
+    <div class="equation-display">\[ x^4 - 5x^2 + 4 = 0 \]</div>
+    <div class="dsa-hint">💡 <strong>Suggerimento:</strong> poni \(t = x^2\) e risolvi l'equazione di 2° grado in \(t\). Poi ricorda che \(t = x^2 \geq 0\).</div>
+    <button class="sol-btn" onclick="toggleSol('sol1',this)">👁 Mostra soluzione</button>
+    <div class="sol-area" id="sol1">
+      <p>Poniamo \(t = x^2\): &nbsp; \(t^2 - 5t + 4 = 0\)</p>
+      <p>\(\Delta = 25 - 16 = 9\) &nbsp;→&nbsp; \(t = \dfrac{5 \pm 3}{2}\) &nbsp;→&nbsp; \(t_1 = 4,\; t_2 = 1\)</p>
+      <p>Entrambi \(\geq 0\):</p>
+      <p>• Da \(t_1=4\): \(x^2=4 \Rightarrow x=\pm 2\)</p>
+      <p>• Da \(t_2=1\): \(x^2=1 \Rightarrow x=\pm 1\)</p>
+      <div style="margin-top:10px;background:#eafaf1;border-radius:8px;padding:12px 16px;font-weight:700;color:#1a6e3c">\(S = \{-2,\,-1,\,1,\,2\}\)</div>
+    </div>
+  </div>
+
+  <div class="ex-card" id="ex2">
+    <div class="ex-header">
+      <div class="ex-num">2</div>
+      <div><div class="ex-title">Equazione biquadratica</div><div class="ex-subtitle">Livello ★☆☆</div></div>
+    </div>
+    <div class="equation-display">\[ x^4 - 13x^2 + 36 = 0 \]</div>
+    <div class="dsa-hint">💡 Cerca due numeri la cui somma è 13 e il cui prodotto è 36.</div>
+    <button class="sol-btn" onclick="toggleSol('sol2',this)">👁 Mostra soluzione</button>
+    <div class="sol-area" id="sol2">
+      <p>Poniamo \(t=x^2\): \(t^2-13t+36=0\)</p>
+      <p>\(\Delta = 169-144=25\) → \(t = \dfrac{13\pm5}{2}\) → \(t_1=9,\;t_2=4\)</p>
+      <p>• Da \(t_1=9\): \(x=\pm 3\) &nbsp;• Da \(t_2=4\): \(x=\pm 2\)</p>
+      <div style="margin-top:10px;background:#eafaf1;border-radius:8px;padding:12px 16px;font-weight:700;color:#1a6e3c">\(S = \{-3,\,-2,\,2,\,3\}\)</div>
+    </div>
+  </div>
+
+  <div class="ex-card" id="ex3">
+    <div class="ex-header">
+      <div class="ex-num">3</div>
+      <div><div class="ex-title">Biquadratica con coefficiente</div><div class="ex-subtitle">Livello ★★☆</div></div>
+    </div>
+    <div class="equation-display">\[ 2x^4 - 7x^2 + 3 = 0 \]</div>
+    <div class="dsa-hint">💡 Poni \(t=x^2\): l'equazione diventa \(2t^2-7t+3=0\). Usa la formula quadratica.</div>
+    <button class="sol-btn" onclick="toggleSol('sol3',this)">👁 Mostra soluzione</button>
+    <div class="sol-area" id="sol3">
+      <p>Poniamo \(t=x^2\): \(2t^2-7t+3=0\)</p>
+      <p>\(\Delta=49-24=25\) → \(t=\dfrac{7\pm5}{4}\) → \(t_1=3,\;t_2=\dfrac{1}{2}\)</p>
+      <p>• Da \(t_1=3\): \(x=\pm\sqrt{3}\) &nbsp;• Da \(t_2=\frac{1}{2}\): \(x=\pm\dfrac{\sqrt{2}}{2}\)</p>
+      <div style="margin-top:10px;background:#eafaf1;border-radius:8px;padding:12px 16px;font-weight:700;color:#1a6e3c">\(S = \left\{-\sqrt{3},\;-\dfrac{\sqrt{2}}{2},\;\dfrac{\sqrt{2}}{2},\;\sqrt{3}\right\}\)</div>
+    </div>
+  </div>
+
+  <div class="ex-card" id="ex4">
+    <div class="ex-header">
+      <div class="ex-num">4</div>
+      <div><div class="ex-title">Biquadratica — una sola coppia di soluzioni</div><div class="ex-subtitle">Livello ★★☆ — discriminante parziale</div></div>
+    </div>
+    <div class="equation-display">\[ x^4 + x^2 - 12 = 0 \]</div>
+    <button class="sol-btn" onclick="toggleSol('sol4',this)">👁 Mostra soluzione</button>
+    <div class="sol-area" id="sol4">
+      <p>Poniamo \(t=x^2\): \(t^2+t-12=0\)</p>
+      <p>\(\Delta=1+48=49\) → \(t=\dfrac{-1\pm7}{2}\) → \(t_1=3,\;t_2=-4\)</p>
+      <p>\(t_2=-4<0\) → <strong>scartata</strong></p>
+      <p>• Da \(t_1=3\): \(x=\pm\sqrt{3}\)</p>
+      <div style="margin-top:10px;background:#eafaf1;border-radius:8px;padding:12px 16px;font-weight:700;color:#1a6e3c">\(S = \{-\sqrt{3},\;\sqrt{3}\}\)</div>
+    </div>
+  </div>
+
+  <!-- GRUPPO 2: BINOMIE -->
+  <div style="margin:32px 0 10px">
+    <h3 style="color:var(--teal);font-size:1.05rem;margin-bottom:16px;padding-left:4px">🟢 Equazioni Binomie</h3>
+  </div>
+
+  <div class="ex-card binomia" id="ex5">
+    <div class="ex-header">
+      <div class="ex-num">5</div>
+      <div><div class="ex-title">Equazione binomia di 3° grado</div><div class="ex-subtitle">Livello ★☆☆</div></div>
+    </div>
+    <div class="equation-display">\[ x^3 - 27 = 0 \]</div>
+    <div class="dsa-hint">💡 Isoliamo \(x^3 = 27\). Con grado dispari c'è sempre esattamente una soluzione reale.</div>
+    <button class="sol-btn" onclick="toggleSol('sol5',this)">👁 Mostra soluzione</button>
+    <div class="sol-area" id="sol5">
+      <p>\(x^3 = 27\) → \(x = \sqrt[3]{27} = 3\)</p>
+      <div style="margin-top:10px;background:#e8f8f5;border-radius:8px;padding:12px 16px;font-weight:700;color:#0e6655">\(S = \{3\}\)</div>
+    </div>
+  </div>
+
+  <div class="ex-card binomia" id="ex6">
+    <div class="ex-header">
+      <div class="ex-num">6</div>
+      <div><div class="ex-title">Equazione binomia di 4° grado</div><div class="ex-subtitle">Livello ★☆☆</div></div>
+    </div>
+    <div class="equation-display">\[ x^4 - 81 = 0 \]</div>
+    <div class="dsa-hint">💡 Oppure: scomponibile come differenza di quadrati: \((x^2-9)(x^2+9)=0\).</div>
+    <button class="sol-btn" onclick="toggleSol('sol6',this)">👁 Mostra soluzione</button>
+    <div class="sol-area" id="sol6">
+      <p><strong>Metodo 1 — binomia:</strong> \(x^4=81\) → \(x=\pm\sqrt[4]{81}=\pm 3\)</p>
+      <p><strong>Metodo 2 — scomposizione:</strong> \((x^2-9)(x^2+9)=0\)</p>
+      <p>\(x^2=9 \Rightarrow x=\pm 3\) &nbsp;|&nbsp; \(x^2=-9\) → nessuna soluzione reale</p>
+      <div style="margin-top:10px;background:#e8f8f5;border-radius:8px;padding:12px 16px;font-weight:700;color:#0e6655">\(S = \{-3,\;3\}\)</div>
+    </div>
+  </div>
+
+  <div class="ex-card binomia" id="ex7">
+    <div class="ex-header">
+      <div class="ex-num">7</div>
+      <div><div class="ex-title">Binomia con coefficiente</div><div class="ex-subtitle">Livello ★★☆</div></div>
+    </div>
+    <div class="equation-display">\[ 3x^5 + 96 = 0 \]</div>
+    <button class="sol-btn" onclick="toggleSol('sol7',this)">👁 Mostra soluzione</button>
+    <div class="sol-area" id="sol7">
+      <p>\(3x^5 = -96\) → \(x^5 = -32\) → \(x = \sqrt[5]{-32} = -2\)</p>
+      <div style="margin-top:10px;background:#e8f8f5;border-radius:8px;padding:12px 16px;font-weight:700;color:#0e6655">\(S = \{-2\}\)</div>
+    </div>
+  </div>
+
+  <!-- GRUPPO 3: TRINOMIE -->
+  <div style="margin:32px 0 10px">
+    <h3 style="color:var(--purple);font-size:1.05rem;margin-bottom:16px;padding-left:4px">🟣 Equazioni Trinomie con Sostituzione</h3>
+  </div>
+
+  <div class="ex-card trinomia" id="ex8">
+    <div class="ex-header">
+      <div class="ex-num">8</div>
+      <div><div class="ex-title">Equazione di 6° grado</div><div class="ex-subtitle">Livello ★★☆ — sostituzione \(t = x^3\)</div></div>
+    </div>
+    <div class="equation-display">\[ x^6 - 7x^3 - 8 = 0 \]</div>
+    <div class="dsa-hint">💡 Poni \(t = x^3\). Cerca due numeri la cui somma è −7 e il cui prodotto è −8.</div>
+    <button class="sol-btn" onclick="toggleSol('sol8',this)">👁 Mostra soluzione</button>
+    <div class="sol-area" id="sol8">
+      <p>Poniamo \(t=x^3\): \(t^2-7t-8=0\)</p>
+      <p>\((t-8)(t+1)=0\) → \(t_1=8,\;t_2=-1\)</p>
+      <p>• Da \(x^3=8\): \(x=2\) &nbsp;• Da \(x^3=-1\): \(x=-1\)</p>
+      <div style="margin-top:10px;background:#f4ecf7;border-radius:8px;padding:12px 16px;font-weight:700;color:#6c3483">\(S = \{-1,\;2\}\)</div>
+    </div>
+  </div>
+
+  <div class="ex-card trinomia" id="ex9">
+    <div class="ex-header">
+      <div class="ex-num">9</div>
+      <div><div class="ex-title">Equazione di 4° grado trinomia</div><div class="ex-subtitle">Livello ★★☆ — sostituzione \(t = x^2\)</div></div>
+    </div>
+    <div class="equation-display">\[ x^4 - 10x^2 + 9 = 0 \]</div>
+    <button class="sol-btn" onclick="toggleSol('sol9',this)">👁 Mostra soluzione</button>
+    <div class="sol-area" id="sol9">
+      <p>Poniamo \(t=x^2\): \(t^2-10t+9=0\)</p>
+      <p>\((t-1)(t-9)=0\) → \(t_1=1,\;t_2=9\)</p>
+      <p>• Da \(t_1=1\): \(x=\pm 1\) &nbsp;• Da \(t_2=9\): \(x=\pm 3\)</p>
+      <div style="margin-top:10px;background:#f4ecf7;border-radius:8px;padding:12px 16px;font-weight:700;color:#6c3483">\(S = \{-3,\,-1,\,1,\,3\}\)</div>
+    </div>
+  </div>
+
+  <!-- GRUPPO 4: RUFFINI -->
+  <div style="margin:32px 0 10px">
+    <h3 style="color:var(--orange);font-size:1.05rem;margin-bottom:16px;padding-left:4px">🟠 Scomposizione e Regola di Ruffini</h3>
+  </div>
+
+  <div class="ex-card ruffini" id="ex10">
+    <div class="ex-header">
+      <div class="ex-num">10</div>
+      <div><div class="ex-title">Equazione di 3° grado — Ruffini</div><div class="ex-subtitle">Livello ★★☆</div></div>
+    </div>
+    <div class="equation-display">\[ x^3 - 3x^2 - 4x + 12 = 0 \]</div>
+    <div class="dsa-hint">💡 Prova i divisori di 12: ±1, ±2, ±3, ±4, ±6, ±12. Una volta trovata una radice, usa Ruffini per ottenere il polinomio di 2° grado.</div>
+    <button class="sol-btn" onclick="toggleSol('sol10',this)">👁 Mostra soluzione</button>
+    <div class="sol-area" id="sol10">
+      <p>Proviamo \(x=2\): \(8-12-8+12=0\) ✓</p>
+      <p>Ruffini con \(r=2\):</p>
+      <table class="theory-table" style="width:auto;margin:8px 0">
+        <tr><th></th><th>1</th><th>−3</th><th>−4</th><th>12</th></tr>
+        <tr><td style="font-weight:700;color:var(--orange)">2 ↓</td><td></td><td>2</td><td>−2</td><td>−12</td></tr>
+        <tr><td></td><td>1</td><td>−1</td><td>−6</td><td style="color:var(--green);font-weight:700">0</td></tr>
+      </table>
+      <p>Quoziente: \(x^2-x-6=(x-3)(x+2)\)</p>
+      <p>\((x-2)(x-3)(x+2)=0\)</p>
+      <div style="margin-top:10px;background:#fdf2e9;border-radius:8px;padding:12px 16px;font-weight:700;color:#935116">\(S = \{-2,\;2,\;3\}\)</div>
+    </div>
+  </div>
+
+  <div class="ex-card ruffini" id="ex11">
+    <div class="ex-header">
+      <div class="ex-num">11</div>
+      <div><div class="ex-title">Equazione di 3° grado — Ruffini</div><div class="ex-subtitle">Livello ★★★</div></div>
+    </div>
+    <div class="equation-display">\[ 2x^3 - x^2 - 8x + 4 = 0 \]</div>
+    <div class="dsa-hint">💡 Con \(a_3=2\) e \(a_0=4\), le radici razionali candidate sono \(\pm\frac{p}{q}\) con \(p | 4\) e \(q | 2\). Prova: ±1, ±2, ±4, ±½.</div>
+    <button class="sol-btn" onclick="toggleSol('sol11',this)">👁 Mostra soluzione</button>
+    <div class="sol-area" id="sol11">
+      <p>Proviamo \(x=\frac{1}{2}\): \(2\cdot\frac{1}{8}-\frac{1}{4}-4+4=\frac{1}{4}-\frac{1}{4}=0\) ✓</p>
+      <p>Ruffini con \(r=\frac{1}{2}\):</p>
+      <table class="theory-table" style="width:auto;margin:8px 0">
+        <tr><th></th><th>2</th><th>−1</th><th>−8</th><th>4</th></tr>
+        <tr><td style="font-weight:700;color:var(--orange)">½ ↓</td><td></td><td>1</td><td>0</td><td>−4</td></tr>
+        <tr><td></td><td>2</td><td>0</td><td>−8</td><td style="color:var(--green);font-weight:700">0</td></tr>
+      </table>
+      <p>Quoziente: \(2x^2-8=2(x^2-4)=2(x-2)(x+2)\)</p>
+      <p>\(\left(x-\frac{1}{2}\right)\cdot 2(x-2)(x+2)=0\)</p>
+      <div style="margin-top:10px;background:#fdf2e9;border-radius:8px;padding:12px 16px;font-weight:700;color:#935116">\(S = \left\{-2,\;\dfrac{1}{2},\;2\right\}\)</div>
+    </div>
+  </div>
+
+  <div class="ex-card ruffini" id="ex12">
+    <div class="ex-header">
+      <div class="ex-num">12</div>
+      <div><div class="ex-title">Equazione di 4° grado — doppia applicazione di Ruffini</div><div class="ex-subtitle">Livello ★★★</div></div>
+    </div>
+    <div class="equation-display">\[ x^4 - 2x^3 - 7x^2 + 8x + 12 = 0 \]</div>
+    <div class="dsa-hint">💡 Dopo la prima divisione di Ruffini otterrai un polinomio di 3° grado: applica Ruffini una seconda volta, poi risolvi il fattore di 2° grado risultante.</div>
+    <button class="sol-btn" onclick="toggleSol('sol12',this)">👁 Mostra soluzione</button>
+    <div class="sol-area" id="sol12">
+      <p>Proviamo \(x=1\): \(1-2-7+8+12=12 \neq 0\)</p>
+      <p>Proviamo \(x=2\): \(16-16-28+16+12=0\) ✓</p>
+      <p>1° Ruffini (\(r=2\)): quoziente \(x^3-7x-6\)&nbsp; (verifica: \(1,0,-7,-6\))</p>
+      <p style="font-size:.85rem;color:#777">coefficienti ridotti: 1 | 2-2=0 | 0-14=-... — per brevità il risultato è \(x^3+0x^2-7x-6\), vedi simulatore</p>
+      <p>2° Ruffini: proviamo \(x=-1\) in \(x^3-7x-6\): \(-1+7-6=0\) ✓</p>
+      <p>Quoziente: \(x^2-x-6=(x-3)(x+2)\)</p>
+      <p>\((x-2)(x+1)(x-3)(x+2)=0\)</p>
+      <div style="margin-top:10px;background:#fdf2e9;border-radius:8px;padding:12px 16px;font-weight:700;color:#935116">\(S = \{-2,\,-1,\,2,\,3\}\)</div>
+    </div>
+  </div>
+
+</div><!-- fine tab esercizi -->
+
+<script>
+// ====== TAB SWITCHING ======
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ====== PROGRESS ======
+let solved = new Set();
+const TOT = 12;
+function updateProgress() {
+  document.getElementById('progress-text').textContent = solved.size + ' / ' + TOT + ' esercizi risolti';
+  document.getElementById('progress-fill').style.width = (solved.size / TOT * 100) + '%';
+}
+function toggleSol(id, btn) {
+  const el = document.getElementById(id);
+  const num = id.replace('sol','');
+  const shown = el.classList.toggle('shown');
+  btn.textContent = shown ? '🙈 Nascondi soluzione' : '👁 Mostra soluzione';
+  if (shown) { solved.add(num); updateProgress(); }
+}
+function resetProgress() {
+  solved.clear(); updateProgress();
+  document.querySelectorAll('.sol-area').forEach(el => el.classList.remove('shown'));
+  document.querySelectorAll('.sol-btn').forEach(b => b.textContent = '👁 Mostra soluzione');
+}
+
+// ====== BIQUADRATICA SOLVER ======
+let biqChartInstance = null;
+function solviBiquadratica() {
+  const a = parseFloat(document.getElementById('biq-a').value);
+  const b = parseFloat(document.getElementById('biq-b').value);
+  const c = parseFloat(document.getElementById('biq-c').value);
+  if (isNaN(a)||isNaN(b)||isNaN(c)||a===0) {
+    alert('Inserisci valori validi e a ≠ 0'); return;
+  }
+  const res = document.getElementById('biq-result');
+  res.style.display = 'block';
+  const delta = b*b - 4*a*c;
+  let html = '';
+
+  html += `<div class="result-step"><div class="step-lbl">📌 Passo 1 — Sostituzione t = x²</div>
+    <p>L'equazione \\(${fmt(a)}x^4 + ${fmt(b)}x^2 + ${fmt(c)} = 0\\) diventa:</p>
+    <p>\\[${fmt(a)}t^2 + ${fmt(b)}t + ${fmt(c)} = 0\\]</div>`;
+
+  html += `<div class="result-step"><div class="step-lbl">📌 Passo 2 — Calcolo del discriminante</div>
+    <p>\\[\\Delta = b^2 - 4ac = (${fmt(b)})^2 - 4 \\cdot (${fmt(a)}) \\cdot (${fmt(c)}) = ${round(b*b)} - ${round(4*a*c)} = ${round(delta)}\\]</div>`;
+
+  if (delta < 0) {
+    html += `<div class="sol-none">❌ \\(\\Delta < 0\\): l'equazione in \\(t\\) non ha soluzioni reali → nessuna soluzione reale per l'equazione originale.</div>`;
+    res.innerHTML = html;
+    if (MathJax) MathJax.typesetPromise([res]);
+    drawBiqChart(a, b, c, []);
+    return;
+  }
+
+  const sqrtD = Math.sqrt(delta);
+  const t1 = (-b + sqrtD) / (2*a);
+  const t2 = (-b - sqrtD) / (2*a);
+  html += `<div class="result-step"><div class="step-lbl">📌 Passo 3 — Soluzioni in t</div>
+    <p>\\[t = \\frac{-b \\pm \\sqrt{\\Delta}}{2a} = \\frac{${fmt(-b)} \\pm ${round(sqrtD,4)}}{${fmt(2*a)}}\\]</p>
+    <p>\\(t_1 = ${round(t1,6)}\\) &nbsp;&nbsp; \\(t_2 = ${round(t2,6)}\\)</div>`;
+
+  let roots = [];
+  let step4 = `<div class="result-step"><div class="step-lbl">📌 Passo 4 — Ritorno a x (ricorda: t = x² ≥ 0)</div>`;
+  [t1, t2].forEach((t, i) => {
+    const lbl = 't' + (i+1);
+    if (Math.abs(t) < 1e-9) {
+      step4 += `<p>\\(${lbl} = 0 \\geq 0\\) ✓ → \\(x = 0\\)</p>`;
+      roots.push(0);
+    } else if (t > 0) {
+      const xv = Math.sqrt(t);
+      step4 += `<p>\\(${lbl} = ${round(t,6)} > 0\\) ✓ → \\(x = \\pm\\sqrt{${round(t,6)}} = \\pm ${round(xv,6)}\\)</p>`;
+      roots.push(-xv, xv);
+    } else {
+      step4 += `<p>\\(${lbl} = ${round(t,6)} < 0\\) ❌ scartato (x² non può essere negativo)</p>`;
+    }
+  });
+  step4 += '</div>';
+  html += step4;
+
+  if (roots.length === 0) {
+    html += `<div class="sol-none">❌ Nessuna soluzione reale.</div>`;
+  } else {
+    roots.sort((a,b) => a-b);
+    const rootStr = roots.map(r => `\\(${round(r,6)}\\)`).join(', ');
+    html += `<div class="sol-final">✅ Soluzioni: \\(S = \\{${roots.map(r=>round(r,6)).join(',\\;')}\\}\\)</div>`;
+  }
+
+  res.innerHTML = html;
+  if (window.MathJax) MathJax.typesetPromise([res]);
+  drawBiqChart(a, b, c, roots);
+}
+
+function drawBiqChart(a, b, c, roots) {
+  const wrap = document.getElementById('biq-chart-wrap');
+  const note = document.getElementById('biq-chart-note');
+  wrap.style.display = 'block';
+  note.style.display = 'block';
+  const labels = [], data = [];
+  let xmin = -4, xmax = 4;
+  if (roots.length > 0) {
+    const rmin = Math.min(...roots), rmax = Math.max(...roots);
+    xmin = Math.min(-3.5, rmin - 1);
+    xmax = Math.max(3.5, rmax + 1);
+  }
+  const steps = 200;
+  for (let i = 0; i <= steps; i++) {
+    const x = xmin + (xmax - xmin) * i / steps;
+    const y = a*x*x*x*x + b*x*x + c;
+    labels.push(round(x, 2));
+    data.push(round(y, 4));
+  }
+  const rootPoints = roots.map(r => ({x: round(r,6), y: 0}));
+  if (biqChartInstance) biqChartInstance.destroy();
+  biqChartInstance = new Chart(document.getElementById('biqChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        { label: 'f(x) = ax⁴+bx²+c', data, borderColor: '#2d6a9f', borderWidth: 2, pointRadius: 0, tension: 0.3, fill: false },
+        { label: 'Radici reali', data: labels.map((l,i) => { const x = xmin + (xmax-xmin)*i/steps; return roots.some(r => Math.abs(r-x) < (xmax-xmin)/steps*1.5) ? 0 : null; }), borderColor: 'transparent', pointBackgroundColor: '#e74c3c', pointRadius: 7, pointStyle: 'circle', showLine: false }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: {
+        x: { ticks: { maxTicksLimit: 10, callback: (v, i) => labels[i] }, grid: { color: '#ecf0f1' } },
+        y: { grid: { color: '#ecf0f1' } }
+      },
+      plugins: { legend: { position: 'top' }, tooltip: { enabled: false } }
+    }
+  });
+}
+
+function resetBiq() {
+  document.getElementById('biq-a').value = '1';
+  document.getElementById('biq-b').value = '-5';
+  document.getElementById('biq-c').value = '4';
+  document.getElementById('biq-result').style.display = 'none';
+  document.getElementById('biq-chart-wrap').style.display = 'none';
+  document.getElementById('biq-chart-note').style.display = 'none';
+  if (biqChartInstance) { biqChartInstance.destroy(); biqChartInstance = null; }
+}
+
+// ====== BINOMIA SOLVER ======
+function solviBinomia() {
+  const a = parseFloat(document.getElementById('bin-a').value);
+  const n = parseInt(document.getElementById('bin-n').value);
+  const b = parseFloat(document.getElementById('bin-b').value);
+  if (isNaN(a)||isNaN(n)||isNaN(b)||a===0||n<2) {
+    alert('Inserisci valori validi (a≠0, n≥2)'); return;
+  }
+  const k = -b / a;
+  const res = document.getElementById('bin-result');
+  res.style.display = 'block';
+  let html = `<div class="result-step"><div class="step-lbl">Forma standard</div>
+    <p>\\(${fmt(a)}x^{${n}} + ${fmt(b)} = 0\\) &nbsp;→&nbsp; \\(x^{${n}} = ${round(k,6)}\\)</div>`;
+
+  if (n % 2 === 0) {
+    if (k < 0) {
+      html += `<div class="sol-none">❌ \\(n = ${n}\\) è pari e \\(k = ${round(k,6)} < 0\\): nessuna soluzione reale.</div>`;
+    } else if (Math.abs(k) < 1e-12) {
+      html += `<div class="sol-final">✅ \\(x = 0\\) (soluzione unica)</div>`;
+    } else {
+      const xv = Math.pow(k, 1/n);
+      html += `<div class="result-step"><div class="step-lbl">\\(n\\) pari, \\(k > 0\\): due soluzioni</div>
+        <p>\\(x = \\pm\\sqrt[${n}]{${round(k,6)}} = \\pm ${round(xv,6)}\\)</p></div>
+        <div class="sol-final">✅ \\(S = \\{${round(-xv,6)},\\;${round(xv,6)}\\}\\)</div>`;
+    }
+  } else {
+    const xv = k >= 0 ? Math.pow(k, 1/n) : -Math.pow(-k, 1/n);
+    html += `<div class="result-step"><div class="step-lbl">\\(n\\) dispari: una soluzione reale</div>
+      <p>\\(x = \\sqrt[${n}]{${round(k,6)}} = ${round(xv,6)}\\)</p></div>
+      <div class="sol-final">✅ \\(S = \\{${round(xv,6)}\\}\\)</div>`;
+  }
+  res.innerHTML = html;
+  if (window.MathJax) MathJax.typesetPromise([res]);
+}
+
+// ====== RUFFINI SOLVER ======
+function solviRuffini() {
+  const a = parseFloat(document.getElementById('ruf-a').value);
+  const b = parseFloat(document.getElementById('ruf-b').value);
+  const c = parseFloat(document.getElementById('ruf-c').value);
+  const d = parseFloat(document.getElementById('ruf-d').value);
+  const r = parseFloat(document.getElementById('ruf-r').value);
+  if ([a,b,c,d,r].some(isNaN)||a===0) { alert('Inserisci valori validi'); return; }
+  const res = document.getElementById('ruf-result');
+  res.style.display = 'block';
+  // Ruffini scheme
+  const row1 = [a, b, c, d];
+  const carry = [0, a*r, 0, 0];
+  carry[2] = (b + carry[1]) * r;
+  carry[3] = (c + carry[2]) * r;
+  const row2 = [a, round(b + carry[1],10), round(c + carry[2],10), round(d + carry[3],10)];
+  const remainder = row2[3];
+  const isRoot = Math.abs(remainder) < 1e-9;
+
+  let html = `<div class="result-step"><div class="step-lbl">Schema di Ruffini con r = ${r}</div>
+  <table class="theory-table" style="width:auto"><tr>
+    <th></th><th>${row1[0]}</th><th>${row1[1]}</th><th>${row1[2]}</th><th>${row1[3]}</th></tr>
+  <tr>
+    <td style="font-weight:700;color:var(--orange)">${r} ↓</td><td></td>
+    <td>${round(carry[1],10)}</td><td>${round(carry[2],10)}</td><td>${round(carry[3],10)}</td></tr>
+  <tr>
+    <td></td><td>${row2[0]}</td><td>${row2[1]}</td><td>${row2[2]}</td>
+    <td style="font-weight:700;color:${isRoot?'var(--green)':'var(--red)'}">${round(remainder,10)}</td></tr>
+  </table></div>`;
+
+  if (!isRoot) {
+    html += `<div class="sol-none">❌ Resto = ${round(remainder,10)} ≠ 0: \\(x = ${r}\\) non è radice del polinomio.</div>`;
+  } else {
+    const q0 = row2[0], q1 = row2[1], q2 = row2[2];
+    html += `<div class="result-step"><div class="step-lbl">✅ x = ${r} è radice — Polinomio quoziente</div>
+      <p>\\(${fmt(a)}x^3 + ${fmt(b)}x^2 + ${fmt(c)}x + ${fmt(d)} = (x - ${r})(${fmt(q0)}x^2 + ${fmt(q1)}x + ${fmt(q2)})\\)</p>
+      <p>Ora risolvi \\(${fmt(q0)}x^2 + ${fmt(q1)}x + ${fmt(q2)} = 0\\) con la formula quadratica.</p>
+    </div>`;
+    const dq = q1*q1 - 4*q0*q2;
+    if (dq < 0) {
+      html += `<div class="ok-box">Il trinomio \\(${fmt(q0)}x^2 + ${fmt(q1)}x + ${fmt(q2)}\\) ha \\(\\Delta = ${round(dq,4)} < 0\\): nessun'altra radice reale.<br>
+        <strong>Unica soluzione reale: \\(x = ${r}\\)</strong></div>`;
+    } else {
+      const x2 = (-q1 + Math.sqrt(dq))/(2*q0);
+      const x3 = (-q1 - Math.sqrt(dq))/(2*q0);
+      html += `<div class="sol-final">✅ \\(S = \\{${[r,x2,x3].sort((a,b)=>a-b).map(v=>round(v,6)).join(',\\;')}\\}\\)</div>`;
+    }
+  }
+  res.innerHTML = html;
+  if (window.MathJax) MathJax.typesetPromise([res]);
+}
+
+// ====== UTILS ======
+function fmt(n) {
+  const r = round(n, 6);
+  if (r === 0) return '0';
+  return String(r);
+}
+function round(n, dp=4) {
+  return Math.round(n * Math.pow(10, dp)) / Math.pow(10, dp);
+}
+</script>
+</body>
+</html>
